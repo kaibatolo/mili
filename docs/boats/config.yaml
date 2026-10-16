@@ -1,0 +1,153 @@
+vm:
+  name: boat.milli
+  box_id: bx_46hc8czm
+  role: milli
+  archive_after:
+
+# userflow selections — backend reads these and swaps models / tools / limits
+profile:
+  mode: companion          # coding | companion | leader
+  size: medium          # small | medium | large
+  speed: balanced         # fast | balanced | thorough
+  capabilities: [chat, media, thoughtful]  # [chat, media, thoughtful, subagent, frontier]
+  templates: milli     # placeholder for the 4-5 personality templates later
+
+# concrete model maps the backend uses when profile combos are selected
+model_maps:
+  coding_small_fast:
+    default: venice-uncensored-1-2
+    provider: venice
+    base_url: https://api.venice.ai/api/v1
+    fallback: deepseek-v4-flash
+    timeout: 60
+    tools: [terminal, web]
+  companion_chat_media_thoughtful:
+    default: venice-uncensored-1-2
+    provider: venice
+    base_url: https://api.venice.ai/api/v1
+    fallback: grok-4-3
+    image_gen: venice
+    tts: nous
+    timeout: 180
+    tools: [web, image_gen, tts, browser]
+  leader_thorough_frontier_subagent:
+    default: grok-4-3
+    provider: xai
+    base_url: https://api.x.ai/v1
+    fallback: openrouter/anthropic/claude-sonnet-4-6
+    timeout: 300
+    tools: [terminal, web, subagent, browser]
+    max_concurrent: 4
+
+base_urls:
+  venice: https://venice.ai
+  openrouter: https://openrouter.ai
+  xai: https://api.x.ai
+  cloudflare: https://api.cloudflare.com
+  supabase: https://supabase.com
+  pinecone: https://api.pinecone.io
+  boat: https://boat.dev
+  github: https://api.github.com
+  apify: https://api.apify.com
+  civitai: https://civitai.com
+  nous: https://inference-api.nousresearch.com/v1
+  hermes: https://hermes-agent.nousresearch.com
+
+docs:
+  venice: https://docs.venice.ai
+  openrouter: https://openrouter.ai/docs
+  xai: https://docs.x.ai
+  cloudflare_workers: https://developers.cloudflare.com/workers
+  cloudflare_r2: https://developers.cloudflare.com/r2
+  cloudflare_ai: https://developers.cloudflare.com/workers-ai
+  cloudflare_mesh: https://developers.cloudflare.com/mesh
+  supabase: https://supabase.com/docs
+  pinecone: https://docs.pinecone.io
+  boat: https://docs.boat.dev
+  wrangler: https://developers.cloudflare.com/workers/wrangler
+  hermes: https://hermes-agent.nousresearch.com/docs
+  hermes_config: https://hermes-agent.nousresearch.com/docs/user-guide/configuration
+  hermes_gateway: https://hermes-agent.nousresearch.com/docs/user-guide/features/tool-gateway
+
+secrets:
+  cloudflare_ai_gateway:
+  cloudflare_r2:
+  cloudflare_mesh:
+  supabase:
+  boat:
+  github:
+  pinecone:
+  xai:
+  openrouter:
+  venice:
+  nous:
+  apify:
+  civitai:
+
+hermes:
+  model:
+    default: venice-uncensored-1-2
+    provider: venice
+    base_url: https://api.venice.ai/api/v1
+    fallback: grok-4-3
+  terminal:
+    backend: local
+    timeout: 180
+  web:
+    backend: nous
+  image_gen:
+    provider: venice
+  tts:
+    provider: nous
+  gateway:
+    enabled: true
+    platforms: []
+    port: 8642
+
+packages:
+  - "@agnamo/bingo"
+  - "@agnamo/pwshai"
+  - "@opencode/cli2"
+  - wrangler
+  - supabase
+  - "@cloudflare/workers-types"
+  - "@cloudflare/ai"
+  - pinecone-client
+  - boat
+  - hermes-agent
+  - node
+  - npm
+  - python3
+  - pip
+  - git
+  - curl
+  - jq
+  - ripgrep
+  - ffmpeg
+  - docker.io
+  - docker-compose
+  - cloudflare-warp
+
+startup_commands:
+  - "sudo apt update && sudo apt upgrade -y"
+  - "sudo apt install -y notepadqq nodejs npm python3 python3-pip git curl jq ripgrep ffmpeg docker.io docker-compose"
+  - "npm install -g wrangler"
+  - "pip install --upgrade hermes-agent pinecone-client"
+  - "hermes setup"
+  - "mkdir -p ~/.hermes"
+
+files:
+  - README.md
+  - agent-profiles.manifest.json
+  - AGENTS.md
+  - SOUL.md
+  - system-prompt.md
+  - rails.md
+  - profile-matrix.md
+  - character.yaml
+  - config.yaml
+  - initial.yaml
+  - maintenance.sh
+  - ~/.hermes/config.yaml
+  - ~/.hermes/.env
+  - ~/.hermes/SOUL.md
