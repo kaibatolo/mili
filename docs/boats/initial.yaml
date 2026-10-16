@@ -1,0 +1,35 @@
+# initial setup scripts — paste real tokens/keys then run sections as needed
+# source or copy-paste the blocks
+
+scripts:
+  tailscale: |
+    curl -fsSL https://tailscale.com/install.sh | sh
+    sudo tailscale up --auth-key=tskey-auth-XXXX
+
+  cloudflare_mesh: |
+    # install cloudflare-warp (Debian/Ubuntu)
+    curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor -o /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(. /etc/os-release && echo $VERSION_CODENAME) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
+    sudo apt-get update -qq && sudo apt-get install -y -qq cloudflare-warp
+    # register + connect (replace TOKEN from dashboard or API)
+    sudo warp-cli --accept-tos connector new MESH_NODE_TOKEN_HERE && sudo warp-cli --accept-tos connect
+    # verify
+    warp-cli status
+
+  supabase: |
+    # install CLI
+    curl -fsSL https://raw.githubusercontent.com/supabase/cli/main/install | bash
+    # or: npm install -g supabase
+    # init + link (replace PROJECT_REF)
+    supabase init
+    supabase login
+    supabase link --project-ref PROJECT_REF_HERE
+    # optional local stack
+    # supabase start
+    # supabase status
+
+  hermes_base: |
+    curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+    source ~/.bashrc
+    hermes setup
+    mkdir -p ~/.hermes
